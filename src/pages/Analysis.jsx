@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Analysis.css'
-
+import { analyzeLocally } from '../lib/colorAnalysis'
 const quizSteps = [
   {
     id: 'skin',
@@ -85,29 +85,60 @@ export default function Analysis() {
       setTimeout(() => setQuizStep((s) => s + 1), 300)
     }
   }
+  /*
+    const analyzePhoto = async () => {
+      setLoading(true)
+      setError('')
+      try {
+        const base64 = imagePreview.split(',')[1]
+        const mediaType = imageFile.type
+        const res = await fetch('/.netlify/functions/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageBase64: base64, mediaType }),
+        })
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.error || 'Analysis failed')
+        navigate('/results', { state: { result: data, method: 'photo' } })
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }*/
 
-  const analyzePhoto = async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const base64 = imagePreview.split(',')[1]
-      const mediaType = imageFile.type
-      const res = await fetch('/.netlify/functions/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageBase64: base64, mediaType }),
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Analysis failed')
-      navigate('/results', { state: { result: data, method: 'photo' } })
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const analyzePhoto = () => {
+    setLoading(true);
+    setError("");
 
-  const analyzeQuiz = async () => {
+    setTimeout(() => {
+      try {
+        // fake answers (pošto nemamo AI)
+        const randomSkin = ["warm", "cool", "neutral"];
+        const randomEyes = ["brown", "blue", "green"];
+        const randomHair = ["dark_brown", "black", "light_brown"];
+
+        const fakeAnswers = {
+          skin: randomSkin[Math.floor(Math.random() * randomSkin.length)],
+          eyes: randomEyes[Math.floor(Math.random() * randomEyes.length)],
+          hair: randomHair[Math.floor(Math.random() * randomHair.length)],
+          contrast: "medium",
+        };
+
+        const result = analyzeLocally(fakeAnswers);
+
+        navigate('/results', {
+          state: { result, method: 'photo' },
+        });
+      } catch (err) {
+        setError("Photo analysis failed");
+      } finally {
+        setLoading(false);
+      }
+    }, 1500);
+  };
+
+  /*const analyzeQuiz = async () => {
     setLoading(true)
     setError('')
     try {
@@ -143,7 +174,26 @@ Respond ONLY with a valid JSON object (no markdown):
     } finally {
       setLoading(false)
     }
-  }
+  }*/
+
+  const analyzeQuiz = () => {
+    setLoading(true);
+    setError("");
+
+    setTimeout(() => {
+      try {
+        const result = analyzeLocally(answers);
+
+        navigate('/results', {
+          state: { result, method: 'quiz', answers },
+        });
+      } catch (err) {
+        setError("Analysis failed");
+      } finally {
+        setLoading(false);
+      }
+    }, 1200); // fake AI delay
+  };
 
   const currentStep = quizSteps[quizStep]
   const quizComplete = Object.keys(answers).length === quizSteps.length
@@ -157,7 +207,7 @@ Respond ONLY with a valid JSON object (no markdown):
             <p>Choose how you'd like to discover your seasonal palette.</p>
           </div>
           <div className="mode-grid fade-up" style={{ animationDelay: '0.1s' }}>
-            <button className="mode-card" onClick={() => setMode('photo')}>
+            <button className="mode-card" onClick={() => alert("Photo analysis coming soon!")}>
               <div className="mode-icon">📸</div>
               <h3>Photo Analysis</h3>
               <p>Upload a photo and let our AI analyse your natural colouring for the most accurate result.</p>
