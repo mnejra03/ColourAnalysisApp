@@ -6,6 +6,7 @@ import Auth from './pages/Auth'
 import Analysis from './pages/Analysis'
 import Results from './pages/Results'
 import Profile from './pages/Profile'
+import Footer from './components/Footer'
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth()
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/results" element={<PrivateRoute><Results /></PrivateRoute>} />
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       </Routes>
+      <Footer></Footer>
     </>
   )
 }
