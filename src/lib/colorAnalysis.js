@@ -1,12 +1,46 @@
 export const getPalette = (season) => {
-    const palettes = {
+    /*const palettes = {
         Spring: ["#FFB7A5", "#FFD166", "#A8E6CF", "#FFE5B4", "#FF7F50"],
         Summer: ["#A7C7E7", "#D8BFD8", "#E6E6FA", "#B0C4DE", "#C9ADA7"],
         Autumn: ["#8B4513", "#D2691E", "#556B2F", "#A0522D", "#CD853F"],
         Winter: ["#000000", "#FFFFFF", "#FF0000", "#1E90FF", "#8A2BE2"],
-    };
+    };*/
+    const palettes = {
+        Spring: [
+            { name: "Peach", hex: "#FFB7A5" },
+            { name: "Coral", hex: "#FF7F50" },
+            { name: "Warm Yellow", hex: "#FFD166" },
+            { name: "Light Green", hex: "#A8E6CF" },
+            { name: "Cream", hex: "#FFF1C1" },
+        ],
 
-    return palettes[season];
+        Summer: [
+            { name: "Powder Blue", hex: "#A7C7E7" },
+            { name: "Dusty Lavender", hex: "#D8BFD8" },
+            { name: "Soft Lilac", hex: "#E6E6FA" },
+            { name: "Light Blue Grey", hex: "#B0C4DE" },
+            { name: "Muted Rose", hex: "#C9ADA7" },
+        ],
+
+        Autumn: [
+            { name: "Dark Brown", hex: "#8B4513" },
+            { name: "Burnt Orange", hex: "#D2691E" },
+            { name: "Olive Green", hex: "#556B2F" },
+            { name: "Rust", hex: "#A0522D" },
+            { name: "Caramel", hex: "#CD853F" },
+        ],
+
+        Winter: [
+            { name: "Black", hex: "#000000" },
+            { name: "Pure White", hex: "#FFFFFF" },
+            { name: "Bright Red", hex: "#FF0000" },
+            { name: "Electric Blue", hex: "#1E90FF" },
+            { name: "Violet", hex: "#8A2BE2" },
+        ],
+
+    }
+
+    return palettes[season] || [];
 };
 
 export const analyzeLocally = (answers) => {
@@ -86,7 +120,7 @@ export const analyzeLocally = (answers) => {
         /*characteristics: "You have a naturally balanced and harmonious colouring.",*/
         characteristics: descriptions[season],
         palette: getPalette(season),
-        colourNames: ["Soft Pink", "Sky Blue", "Olive", "Cream", "Coral"],
+        colourNames: palette.map(color => color.name),
         bestColors: "These colours enhance your natural beauty and glow.",
         avoidColors: "Avoid colours with opposite undertones.",
         makeupTips: "Choose makeup that matches your undertone.",
