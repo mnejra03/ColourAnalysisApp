@@ -86,104 +86,78 @@ export default function Analysis() {
     }
   }
   /*
-    const analyzePhoto = async () => {
-      setLoading(true)
-      setError('')
-      try {
-        const base64 = imagePreview.split(',')[1]
-        const mediaType = imageFile.type
-        const res = await fetch('/.netlify/functions/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageBase64: base64, mediaType }),
-        })
-        const data = await res.json()
-        if (!res.ok) throw new Error(data.error || 'Analysis failed')
-        navigate('/results', { state: { result: data, method: 'photo' } })
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }*/
-
+   const analyzePhoto = () => {
+     setLoading(true);
+     setError("");
+ 
+     setTimeout(() => {
+       try {
+         // fake answers (pošto nemamo AI)
+         const randomSkin = ["warm", "cool", "neutral"];
+         const randomEyes = ["brown", "blue", "green"];
+         const randomHair = ["dark_brown", "black", "light_brown"];
+ 
+         const fakeAnswers = {
+           skin: randomSkin[Math.floor(Math.random() * randomSkin.length)],
+           eyes: randomEyes[Math.floor(Math.random() * randomEyes.length)],
+           hair: randomHair[Math.floor(Math.random() * randomHair.length)],
+           contrast: "medium",
+         };
+ 
+         const result = analyzeLocally(fakeAnswers);
+ 
+         navigate('/results', {
+           state: { result, method: 'photo' },
+         });
+       } catch (err) {
+         setError("Photo analysis failed");
+       } finally {
+         setLoading(false);
+       }
+     }, 1500);
+   };*/
   const analyzePhoto = () => {
-    setLoading(true);
-    setError("");
-
-    setTimeout(() => {
-      try {
-        // fake answers (pošto nemamo AI)
-        const randomSkin = ["warm", "cool", "neutral"];
-        const randomEyes = ["brown", "blue", "green"];
-        const randomHair = ["dark_brown", "black", "light_brown"];
-
-        const fakeAnswers = {
-          skin: randomSkin[Math.floor(Math.random() * randomSkin.length)],
-          eyes: randomEyes[Math.floor(Math.random() * randomEyes.length)],
-          hair: randomHair[Math.floor(Math.random() * randomHair.length)],
-          contrast: "medium",
-        };
-
-        const result = analyzeLocally(fakeAnswers);
-
-        navigate('/results', {
-          state: { result, method: 'photo' },
-        });
-      } catch (err) {
-        setError("Photo analysis failed");
-      } finally {
-        setLoading(false);
-      }
-    }, 1500);
-  };
-
-  /*const analyzeQuiz = async () => {
     setLoading(true)
     setError('')
-    try {
-      const prompt = `Based on this person's colour analysis quiz answers, determine their seasonal colour type:
-- Skin undertone: ${answers.skin}
-- Eye colour: ${answers.eyes}
-- Natural hair colour: ${answers.hair}
-- Overall contrast level: ${answers.contrast}
 
-Respond ONLY with a valid JSON object (no markdown):
-{
-  "season": "Spring" | "Summer" | "Autumn" | "Winter",
-  "subtype": "Light Spring" | "True Spring" | "Warm Spring" | "Light Summer" | "True Summer" | "Soft Summer" | "Soft Autumn" | "True Autumn" | "Deep Autumn" | "Deep Winter" | "True Winter" | "Bright Winter",
-  "undertone": "Warm" | "Cool" | "Neutral",
-  "characteristics": "2-3 sentences describing their natural coloring",
-  "palette": ["#hex1","#hex2","#hex3","#hex4","#hex5","#hex6","#hex7","#hex8"],
-  "colourNames": ["name1","name2","name3","name4","name5","name6","name7","name8"],
-  "bestColors": "A sentence about the best colors for this person",
-  "avoidColors": "A sentence about colors to avoid",
-  "makeupTips": "2-3 makeup/styling tips specific to this season",
-  "celebrities": ["Celebrity 1","Celebrity 2","Celebrity 3"]
-}`
-      const res = await fetch('/.netlify/functions/analyze', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quizPrompt: prompt }),
+    setTimeout(() => {
+      const mockResult = {
+        season: "Spring",
+        subtype: "Warm Spring",
+        undertone: "Warm",
+        characteristics: "You have warm and fresh natural colouring.",
+        palette: [
+          { name: "Peach", hex: "#FFB7A5" },
+          { name: "Golden Yellow", hex: "#FFD166" },
+          { name: "Mint Green", hex: "#A8E6CF" },
+          { name: "Cream", hex: "#FFE5B4" },
+          { name: "Coral", hex: "#FF7F50" },
+        ],
+        bestColors: "Warm, light and fresh tones suit you best.",
+        avoidColors: "Avoid cool, dark colours.",
+        makeupTips: "Use peachy blush and warm-toned makeup.",
+        celebrities: ["Zendaya", "Taylor Swift"],
+      }
+
+      navigate('/results', {
+        state: { result: mockResult, method: 'photo' },
       })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Analysis failed')
-      navigate('/results', { state: { result: data, method: 'quiz', answers } })
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }*/
 
+      setLoading(false)
+    }, 1000)
+  }
+  /*
   const analyzeQuiz = () => {
     setLoading(true);
     setError("");
 
     setTimeout(() => {
       try {
-        const result = analyzeLocally(answers);
+        //const result = analyzeLocally(answers);
+console.log("ANSWERS:", answers);
+console.log("RESULT:", result);
 
+        const result = analyzeLocally(answers || {});
         navigate('/results', {
           state: { result, method: 'quiz', answers },
         });
@@ -193,6 +167,29 @@ Respond ONLY with a valid JSON object (no markdown):
         setLoading(false);
       }
     }, 1200); // fake AI delay
+  };*/
+  const analyzeQuiz = () => {
+    setLoading(true);
+    setError("");
+
+    setTimeout(() => {
+      try {
+        if (!answers.skin || !answers.eyes || !answers.hair || !answers.contrast) {
+          throw new Error("Missing answers");
+        }
+
+        const result = analyzeLocally(answers);
+
+        navigate('/results', {
+          state: { result, method: 'quiz', answers },
+        });
+      } catch (err) {
+        console.error(err); // 🔥 VAŽNO
+        setError("Analysis failed");
+      } finally {
+        setLoading(false);
+      }
+    }, 1200);
   };
 
   const currentStep = quizSteps[quizStep]

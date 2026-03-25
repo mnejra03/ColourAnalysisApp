@@ -38,7 +38,6 @@ export default function Results() {
         undertone: result.undertone,
         characteristics: result.characteristics,
         palette: result.palette,
-        colour_names: result.colourNames,
         best_colors: result.bestColors,
         avoid_colors: result.avoidColors,
         makeup_tips: result.makeupTips,
@@ -87,12 +86,23 @@ export default function Results() {
           <h2 className="section-title">Your Colour Palette</h2>
           <p className="section-sub">Click any swatch to copy the hex code.</p>
           <div className="palette-grid">
-            {result.palette?.map((hex, i) => (
-              <button key={hex} className="palette-swatch" onClick={() => copyHex(hex)}>
-                <div className="swatch-color" style={{ background: hex }} />
+            {result.palette?.map((color, i) => (
+              <button
+                key={color.hex}
+                className="palette-swatch"
+                onClick={() => copyHex(color.hex)}
+              >
+                <div
+                  className="swatch-color"
+                  style={{ background: color.hex }}
+                />
                 <div className="swatch-info">
-                  <span className="swatch-name">{result.colourNames?.[i] || `Colour ${i + 1}`}</span>
-                  <span className="swatch-hex">{copied === hex ? 'Copied!' : hex}</span>
+                  <span className="swatch-name">
+                    {color.name}
+                  </span>
+                  <span className="swatch-hex">
+                    {copied === color.hex ? 'Copied!' : color.hex}
+                  </span>
                 </div>
               </button>
             ))}

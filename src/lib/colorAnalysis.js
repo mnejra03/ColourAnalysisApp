@@ -108,6 +108,36 @@ export const analyzeLocally = (answers) => {
 
         return season;
     };
+
+    const palette = getPalette(season) || [];
+
+    const seasonContent = {
+        Spring: {
+            characteristics: "You have a warm, fresh, and radiant colouring with a light and lively appearance.",
+            bestColors: "Bright, warm, and clear colours like peach, coral, warm yellow, and light greens will make you glow.",
+            avoidColors: "Avoid cool, muted, or very dark colours as they can dull your natural warmth.",
+            makeupTips: "Go for warm, glowing makeup — peach blush, coral lips, and golden highlights work beautifully.",
+        },
+        Summer: {
+            characteristics: "Your colouring is soft, cool, and elegant with low contrast and a gentle, delicate appearance.",
+            bestColors: "Soft, cool, and muted tones like powder blue, dusty rose, and lavender enhance your natural elegance.",
+            avoidColors: "Avoid warm, bright, or harsh colours as they can overpower your soft features.",
+            makeupTips: "Choose cool-toned, soft makeup such as rose blush, mauve lips, and subtle highlights.",
+        },
+        Autumn: {
+            characteristics: "You have rich, warm, and earthy colouring with depth and a naturally grounded look.",
+            bestColors: "Warm, deep, and earthy tones like olive green, rust, burnt orange, and caramel suit you best.",
+            avoidColors: "Avoid cool or icy colours as they can clash with your natural warmth.",
+            makeupTips: "Opt for warm makeup shades like bronze, terracotta, and deep berry tones.",
+        },
+        Winter: {
+            characteristics: "Your colouring is bold, cool, and high contrast, with striking and defined features.",
+            bestColors: "Crisp, cool, and high-contrast colours like black, white, red, and electric blue highlight your features.",
+            avoidColors: "Avoid warm, muted, or dull colours as they reduce your natural contrast.",
+            makeupTips: "Go for bold and cool makeup — red lips, sharp eyeliner, and strong contrast looks.",
+        },
+    };
+
     return {
         season,
         subtype: getSubtype(season, answers),
@@ -118,12 +148,11 @@ export const analyzeLocally = (answers) => {
                     ? "Cool"
                     : "Neutral",
         /*characteristics: "You have a naturally balanced and harmonious colouring.",*/
-        characteristics: descriptions[season],
+        characteristics: seasonContent[season].characteristics,
+        bestColors: seasonContent[season].bestColors,
+        avoidColors: seasonContent[season].avoidColors,
+        makeupTips: seasonContent[season].makeupTips,
         palette: getPalette(season),
-        colourNames: palette.map(color => color.name),
-        bestColors: "These colours enhance your natural beauty and glow.",
-        avoidColors: "Avoid colours with opposite undertones.",
-        makeupTips: "Choose makeup that matches your undertone.",
         celebrities: ["Zendaya", "Taylor Swift", "Emma Watson"],
     };
 };

@@ -12,6 +12,11 @@ const seasonBg = {
   Winter: 'linear-gradient(135deg, #EAF0F8, #D8E4F0)',
 }
 
+const getColorName = (color, i) => {
+  if (typeof color === "string") return `Colour ${i + 1}`
+  return color.name
+}
+
 export default function Profile() {
   const { user } = useAuth()
   const [analyses, setAnalyses] = useState([])
@@ -66,7 +71,16 @@ export default function Profile() {
                   </div>
                   <div className="analysis-item-right">
                     <div className="analysis-mini-palette">
-                      {a.palette?.slice(0, 5).map((hex) => (<div key={hex} style={{ background: hex }} />))}
+                      {a.palette?.slice(0, 5).map((color, i) => {
+                        const hex = typeof color === "string" ? color : color.hex
+
+                        return (
+                          <div
+                            key={hex + i}
+                            style={{ background: hex }}
+                          />
+                        )
+                      })}
                     </div>
                     <span className="analysis-date">{new Date(a.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                     <span className={`expand-icon ${expanded === a.id ? 'open' : ''}`}>›</span>
@@ -83,12 +97,20 @@ export default function Profile() {
                       <div className="detail-block">
                         <h4>Full Palette</h4>
                         <div className="detail-palette">
-                          {a.palette?.map((hex, i) => (
-                            <div key={hex} className="detail-swatch" title={a.colour_names?.[i] || hex}>
-                              <div style={{ background: hex }} />
-                              <span>{a.colour_names?.[i] || hex}</span>
-                            </div>
-                          ))}
+                          {a.palette?.map((color, i) => {
+                            const hex = typeof color === "string" ? color : color.hex
+                            const name = getColorName(color, i)
+
+                            return (
+                              <div key={hex + i} className="palette-swatch">
+                                <div
+                                  className="swatch-color"
+                                  style={{ background: hex }}
+                                />
+                                <span>{name}</span>
+                              </div>
+                            )
+                          })}
                         </div>
                       </div>
                       <div className="detail-block"><h4>Wear</h4><p>{a.best_colors}</p></div>
