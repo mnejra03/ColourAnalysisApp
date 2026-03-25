@@ -138,6 +138,28 @@ export const analyzeLocally = (answers) => {
         },
     };
 
+    const celebrityBySeason = {
+        Spring: ["Blake Lively", "Emma Stone", "Gigi Hadid"],
+        Summer: ["Taylor Swift", "Elle Fanning", "Saoirse Ronan"],
+        Autumn: ["Zendaya", "Jessica Alba", "Julia Roberts"],
+        Winter: ["Anne Hathaway", "Megan Fox", "Dita Von Teese"]
+    }
+
+    const vibeBySeason = {
+        Spring: ["Fresh", "Light", "Playful", "Radiant"],
+        Summer: ["Soft", "Elegant", "Calm", "Romantic"],
+        Autumn: ["Warm", "Earthy", "Rich", "Cozy"],
+        Winter: ["Bold", "High Contrast", "Elegant", "Statement"],
+    }
+
+    const maxScore = 6 // max bodova koje neko može dobiti (približno)
+    const total = score[season]
+
+    const confidence = Math.min(
+        100,
+        Math.round((total / maxScore) * 100)
+    )
+
     return {
         season,
         subtype: getSubtype(season, answers),
@@ -153,6 +175,9 @@ export const analyzeLocally = (answers) => {
         avoidColors: seasonContent[season].avoidColors,
         makeupTips: seasonContent[season].makeupTips,
         palette: getPalette(season),
-        celebrities: ["Zendaya", "Taylor Swift", "Emma Watson"],
+        confidence,
+        //celebrities: ["Zendaya", "Taylor Swift", "Emma Watson"],
+        celebrities: celebrityBySeason[season],
+        vibe: vibeBySeason[season],
     };
 };

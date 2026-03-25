@@ -11,6 +11,13 @@ const seasonDesc = {
   Autumn: 'Rich, warm, and earthy — you glow in rust, olive, burnt orange, and deep teal.',
   Winter: 'Cool, clear, and dramatic — you dazzle in icy pastels, pure white, black, and jewel tones.',
 }
+const celebrityImages = {
+  "Zendaya": "/celebs/Zendaya.jpg",
+  "Taylor Swift": "/celebs/TaylorSwift.jpg",
+  "Emma Watson": "/celebs/EmmaWatson.jpg",
+  "Anne Hathaway": "/celebs/AnneHathaway.jpg",
+  "Megan Fox": "/celebs/MeganFox.jpg",
+}
 
 export default function Results() {
   const { state } = useLocation()
@@ -57,9 +64,10 @@ export default function Results() {
     setCopied(hex)
     setTimeout(() => setCopied(null), 1500)
   }
+  const confidence = result.confidence || 85
 
   return (
-    <div className="results-page">
+    <div className={`results-page results-${result.season?.toLowerCase()}`}>
       <div className={`results-banner results-banner-${result.season?.toLowerCase()}`}>
         <div className="container">
           <div className="banner-content fade-up">
@@ -113,6 +121,13 @@ export default function Results() {
           <div className="result-card result-card-green">
             <div className="result-card-icon">✓</div>
             <h3>Wear These</h3>
+
+            <div className="mini-colors">
+              {result.palette?.slice(0, 4).map(c => (
+                <div key={c.hex} style={{ background: c.hex }} />
+              ))}
+            </div>
+
             <p>{result.bestColors}</p>
           </div>
           <div className="result-card result-card-red">
@@ -129,6 +144,63 @@ export default function Results() {
           </div>
         </section>
 
+        <section className="result-section fade-up">
+          <div className="result-card">
+            <h2>Your Style Vibe</h2>
+
+            <div className="vibe-tags">
+              {(result.vibe || ["Stylish", "Balanced"]).map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+
+            <p>This season suits confident, defined looks with strong visual impact.</p>
+          </div>
+        </section>
+
+
+
+        <div className="confidence-wrapper">
+          <div className="confidence-header">
+            <span>Match Confidence</span>
+            <span>{confidence}%</span>
+          </div>
+
+          <div className="confidence-bar">
+            <div
+              className="confidence-fill"
+              style={{ width: `${confidence}%` }}
+            />
+          </div>
+
+          <p className="confidence-text">
+            {confidence > 80
+              ? "Highly accurate match based on your features."
+              : confidence > 60
+                ? "Good match with some flexibility."
+                : "Approximate match — results may vary."}
+          </p>
+        </div>
+
+        <section className="result-section fade-up">
+          <h2>Outfit Inspiration</h2>
+
+          <div className="outfit-grid">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="outfit-card">
+                <img
+                  src={`./outfits/winter${i}.png`}
+                  onError={(e) => {
+                    e.target.src = `./outfits/winter${i}.jpg`
+                  }}
+                  alt="outfit"
+                />
+                
+              </div>
+            ))}
+          </div>
+        </section>
+
         {result.celebrities?.length > 0 && (
           <section className="result-section fade-up" style={{ animationDelay: '0.25s' }}>
             <div className="result-card">
@@ -136,7 +208,13 @@ export default function Results() {
               <p className="result-sub-text">These celebrities share your colouring:</p>
               <div className="celebrity-list">
                 {result.celebrities.map((c) => (
-                  <span key={c} className="celebrity-chip">{c}</span>
+                  <div key={c} className="celebrity-card">
+                    <img
+                      src={celebrityImages[c] || "/celebs/default.jpg"}
+                      alt={c}
+                    />
+                    <span>{c}</span>
+                  </div>
                 ))}
               </div>
             </div>
